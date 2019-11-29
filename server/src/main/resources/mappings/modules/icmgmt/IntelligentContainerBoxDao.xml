@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxmetro.ic.modules.icmgmt.dao.IntelligentContainerBoxDao">
+    
+	<sql id="intelligentContainerBoxColumns">
+		a.id AS "id",
+		a.serial_no AS "serialNo.id",
+		a.no AS "no",
+		a.status AS "status",
+		a.sort AS "sort",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="intelligentContainerBoxJoins">
+		LEFT JOIN intelligent_container b ON b.id = a.serial_no
+	</sql>
+    
+	<select id="get" resultType="IntelligentContainerBox">
+		SELECT 
+			<include refid="intelligentContainerBoxColumns"/>
+		FROM intelligent_container_box a
+		<include refid="intelligentContainerBoxJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByKey" resultType="IntelligentContainerBox">
+		SELECT
+		<include refid="intelligentContainerBoxColumns"/>
+		FROM intelligent_container_box a
+		<include refid="intelligentContainerBoxJoins"/>
+		WHERE a.serial_no = #{containerId} AND a.no = #{boxNo} limit 1
+	</select>
+	
+	<select id="findList" resultType="IntelligentContainerBox">
+		SELECT 
+			<include refid="intelligentContainerBoxColumns"/>
+		FROM intelligent_container_box a
+		<include refid="intelligentContainerBoxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="serialNo != null and serialNo.id != ''">
+				AND a.serial_no = #{serialNo.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IntelligentContainerBox">
+		SELECT 
+			<include refid="intelligentContainerBoxColumns"/>
+		FROM intelligent_container_box a
+		<include refid="intelligentContainerBoxJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO intelligent_container_box(
+			serial_no,
+			no,
+			status,
+			sort,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{serialNo.id},
+			#{no},
+			#{status},
+			#{sort},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE intelligent_container_box SET 	
+			serial_no = #{serialNo.id},
+			no = #{no},
+			status = #{status},
+			sort = #{sort},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE intelligent_container_box SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE serial_no = #{serialNo.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+</mapper>

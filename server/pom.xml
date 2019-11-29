@@ -601,7 +601,7 @@
 		
 		<!-- 自定义jar依赖包
 		<dependency>
-			<groupId>com.thinkgem.jeesite</groupId>
+			<groupId>com.wxmetro.ic</groupId>
 			<artifactId>test-core</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>

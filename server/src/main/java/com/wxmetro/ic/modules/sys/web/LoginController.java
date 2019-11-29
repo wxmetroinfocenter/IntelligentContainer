@@ -176,8 +176,8 @@ public class LoginController extends BaseController {
 
 //		System.out.println("==========================a");
 //		try {
-//			byte[] bytes = com.thinkgem.jeesite.common.utils.FileUtils.readFileToByteArray(
-//					com.thinkgem.jeesite.common.utils.FileUtils.getFile("c:\\sxt.dmp"));
+//			byte[] bytes = com.wxmetro.ic.common.utils.FileUtils.readFileToByteArray(
+//					com.wxmetro.ic.common.utils.FileUtils.getFile("c:\\sxt.dmp"));
 //			UserUtils.getSession().setAttribute("kkk", bytes);
 //			UserUtils.getSession().setAttribute("kkk2", bytes);
 //		} catch (Exception e) {
