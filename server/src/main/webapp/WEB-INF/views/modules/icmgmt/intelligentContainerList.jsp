@@ -75,6 +75,7 @@
 					${intelligentContainer.remarks}
 				</td>
 				<shiro:hasPermission name="icmgmt:intelligentContainer:edit"><td>
+					<a href="${ctx}/icmgmt/intelligentContainer/boxlist?id=${intelligentContainer.id}">开锁</a>
     				<a href="${ctx}/icmgmt/intelligentContainer/form?id=${intelligentContainer.id}">修改</a>
 					<a href="${ctx}/icmgmt/intelligentContainer/delete?id=${intelligentContainer.id}" onclick="return confirmx('确认要删除该智能货柜表吗？', this.href)">删除</a>
 				</td></shiro:hasPermission>

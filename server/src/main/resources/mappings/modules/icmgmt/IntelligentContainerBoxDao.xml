@@ -13,6 +13,7 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
+		a.type AS "type",
 		a.del_flag AS "delFlag"
 	</sql>
 	
@@ -81,6 +82,7 @@
 			no,
 			status,
 			sort,
+			type,
 			create_by,
 			create_date,
 			update_by,
@@ -92,6 +94,7 @@
 			#{no},
 			#{status},
 			#{sort},
+			#{type},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -107,6 +110,7 @@
 			no = #{no},
 			status = #{status},
 			sort = #{sort},
+			type = #{type},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

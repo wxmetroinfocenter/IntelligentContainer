@@ -21,9 +21,10 @@ CREATE TABLE `intelligent_container` (
  
  CREATE TABLE `intelligent_container_box` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `serial_no` varchar(32) DEFAULT NULL COMMENT '货柜内部识别码',
+  `serial_no` varchar(64) DEFAULT NULL COMMENT '货柜内部识别码',
   `no` varchar(32) DEFAULT NULL COMMENT '货柜柜箱编号',
   `status` varchar(32) DEFAULT NULL COMMENT '货柜柜箱状态',
+  `type` varchar(32) DEFAULT NULL COMMENT '货柜柜箱类型',
   `sort` int DEFAULT NULL COMMENT '排序',
   `create_by` varchar(32) DEFAULT NULL COMMENT '创建者',
   `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -33,7 +34,19 @@ CREATE TABLE `intelligent_container` (
   `del_flag` char(1) DEFAULT '0' COMMENT '删除标记',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT = '货柜柜箱表';
- 
+
+ CREATE TABLE `intelligent_container_box_opening` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `icid` varchar(64) DEFAULT NULL COMMENT '货柜内部识别码',
+  `no` varchar(32) DEFAULT NULL COMMENT '货柜柜箱编号',
+  `create_by` varchar(32) DEFAULT NULL COMMENT '创建者',
+  `create_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(32) DEFAULT NULL COMMENT '更新者',
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `remarks` varchar(500) DEFAULT NULL COMMENT '备注信息',
+  `del_flag` char(1) DEFAULT '0' COMMENT '删除标记',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT = '货柜柜箱表';
   
 
 delete from sys_dict where type= 'ic_status';
@@ -49,4 +62,11 @@ VALUES
 ('ic_box_status_0', '0', '已锁', 'ic_box_status', '货柜柜箱状态', 10, '0','1',now(),'1',now()),
 ('ic_box_status_1', '1', '未锁', 'ic_box_status', '货柜柜箱状态', 20, '0','1',now(),'1',now()),
 ('ic_box_status_2', '2', '异常', 'ic_box_status', '货柜柜箱状态', 30, '0','1',now(),'1',now());
+
+delete from sys_dict where type= 'ic_box_type';
+INSERT INTO `sys_dict` (`id`, `value`, `label`, `type`, `description`, `sort`, `parent_id`, `create_by`,`create_date`,`update_by`,`update_date`) 
+VALUES 
+('ic_box_type_0', '0', '小箱', 'ic_box_type', '柜箱类型', 10, '0','1',now(),'1',now()),
+('ic_box_type_1', '1', '中箱', 'ic_box_type', '柜箱类型', 20, '0','1',now(),'1',now()),
+('ic_box_type_2', '2', '大箱', 'ic_box_type', '柜箱类型', 30, '0','1',now(),'1',now());
  

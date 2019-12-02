@@ -6,8 +6,12 @@ package com.wxmetro.ic.modules.icmgmt.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wxmetro.ic.common.config.Constants;
 import com.wxmetro.ic.common.utils.DateUtils;
 import com.wxmetro.ic.common.utils.IdGen;
+import com.wxmetro.ic.modules.icmgmt.entity.IntelligentContainerBox;
+import com.wxmetro.ic.modules.icmgmt.entity.IntelligentContainerBoxOpening;
+import com.wxmetro.ic.modules.icmgmt.service.IntelligentContainerBoxOpeningService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +29,7 @@ import com.wxmetro.ic.modules.icmgmt.entity.IntelligentContainer;
 import com.wxmetro.ic.modules.icmgmt.service.IntelligentContainerService;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 货柜管理Controller
@@ -37,6 +42,9 @@ public class IntelligentContainerController extends BaseController {
 
 	@Autowired
 	private IntelligentContainerService intelligentContainerService;
+
+	@Autowired
+	private IntelligentContainerBoxOpeningService openingService;
 	
 	@ModelAttribute
 	public IntelligentContainer get(@RequestParam(required=false) String id) {
@@ -63,6 +71,63 @@ public class IntelligentContainerController extends BaseController {
 	public String form(IntelligentContainer intelligentContainer, Model model) {
 		model.addAttribute("intelligentContainer", intelligentContainer);
 		return "modules/icmgmt/intelligentContainerForm";
+	}
+
+	@RequiresPermissions("icmgmt:intelligentContainer:view")
+	@RequestMapping(value = "boxlist")
+	public String boxlist(IntelligentContainer intelligentContainer, Model model) {
+
+		IntelligentContainer ic = intelligentContainerService.get(intelligentContainer.getId());
+		model.addAttribute("intelligentContainer", intelligentContainer);
+		return "modules/icmgmt/intelligentContainerBoxList";
+	}
+
+	@RequiresPermissions("icmgmt:intelligentContainer:view")
+	@RequestMapping(value = "openbox")
+	public String openbox(IntelligentContainer intelligentContainer, Model model,RedirectAttributes redirectAttributes ) {
+		logger.info("id " + intelligentContainer.getId() + ",box no : " + intelligentContainer.getNo() + ",boxStatus="
+				+ intelligentContainer.getBoxStatus());
+
+		if(Constants.IC_BOX_STATUS_UNLOCK.equals(intelligentContainer.getBoxStatus())){
+			IntelligentContainer ic = intelligentContainerService.get(intelligentContainer.getId());
+
+			IntelligentContainerBoxOpening boxOpeningCondition = new IntelligentContainerBoxOpening();
+			boxOpeningCondition.setIcid(intelligentContainer.getId());
+
+			List<IntelligentContainerBoxOpening> result =  openingService.findList(boxOpeningCondition);
+			if(result != null && !result.isEmpty() ){
+				logger.info("此货柜还有锁正待开锁");
+				addMessage(redirectAttributes, "此货柜还有锁正待开锁，请稍后再试！");
+				return "modules/icmgmt/intelligentContainerBoxList";
+			}else {
+				logger.info("加入开锁");
+
+				IntelligentContainerBoxOpening boxOpening = new IntelligentContainerBoxOpening();
+				boxOpening.setIcid(intelligentContainer.getId());
+				boxOpening.setNo(intelligentContainer.getNo());
+				openingService.save(boxOpening);
+
+				//update box status
+				IntelligentContainerBox box = new IntelligentContainerBox();
+				box.setSerialNo(intelligentContainer);
+				box.setNo(intelligentContainer.getNo());
+				box.setStatus(Constants.IC_BOX_STATUS_UNLOCK);
+				intelligentContainerService.saveBox(box);
+
+				return boxlist(intelligentContainer, model);
+			}
+
+		}else {
+			IntelligentContainerBox box = new IntelligentContainerBox();
+			box.setSerialNo(intelligentContainer);
+			box.setNo(intelligentContainer.getNo());
+			box.setStatus(Constants.IC_BOX_STATUS_LOCK);
+			intelligentContainerService.saveBox(box);
+
+			return boxlist(intelligentContainer, model);
+		}
+
+
 	}
 
 	@RequiresPermissions("icmgmt:intelligentContainer:edit")
@@ -102,10 +167,20 @@ public class IntelligentContainerController extends BaseController {
 		}
 		String today = DateUtils.formatDate(new Date(),"yyyyMMdd");
 		for(int i = 0; i < intelligentContainer.getNumber();i++){
-			intelligentContainer.setId(today + String.format("%03d", i+1) + "-" + IdGen.uuid());
-			intelligentContainer.setStatus("0"); //初始化
-			intelligentContainer.setToken(IdGen.randomBase62(16));
-			intelligentContainerService.save(intelligentContainer);
+			IntelligentContainer ic = new IntelligentContainer();
+			ic.setId(today + String.format("%03d", i+1) + "-" + IdGen.uuid());
+			ic.setStatus("0"); //初始化
+			ic.setToken(IdGen.randomBase62(16));
+
+			for(int j = 0 ; j < intelligentContainer.getBoxNum() ; j++){
+				IntelligentContainerBox box = new IntelligentContainerBox();
+				box.setNo(String.valueOf(j + 1));
+				box.setStatus(Constants.IC_BOX_STATUS_LOCK);
+				box.setType(Constants.IC_BOX_TYPE_SMALL);
+				ic.getIntelligentContainerBoxList().add(box);
+			}
+
+			intelligentContainerService.save(ic);
 		}
 
 		addMessage(redirectAttributes, "保存智能货柜表成功");

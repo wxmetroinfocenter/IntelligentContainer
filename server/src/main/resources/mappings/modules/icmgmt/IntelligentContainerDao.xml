@@ -119,8 +119,12 @@
 			deviceid = #{deviceId},
 			devicename = #{deviceName},
 			token = #{token},
-			status = #{status},
+			<if test="status != null and status != ''">
+				status = #{status},
+			</if>
+			<if test="sort != null and sort != ''">
 			sort = #{sort},
+			</if>
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

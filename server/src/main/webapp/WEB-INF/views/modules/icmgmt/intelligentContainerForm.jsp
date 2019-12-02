@@ -63,7 +63,14 @@
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="intelligentContainer" action="${ctx}/icmgmt/intelligentContainer/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
-		<sys:message content="${message}"/>		
+		<sys:message content="${message}"/>
+
+		<div class="control-group">
+			<label class="control-label">货柜内部识别码：</label>
+			<div class="controls">
+				<form:input path="id" htmlEscape="false" maxlength="100" class="input-xlarge " disabled="true"/>
+			</div>
+		</div>
 		<div class="control-group">
 			<label class="control-label">货柜设备编码：</label>
 			<div class="controls">
@@ -102,6 +109,7 @@
 							<tr>
 								<th class="hide"></th>
 								<th>货柜柜箱编号</th>
+								<th>货柜柜箱类型</th>
 								<th>货柜柜箱状态</th>
 								<th>排序</th>
 								<th>备注信息</th>
@@ -122,6 +130,14 @@
 							</td>
 							<td>
 								<input id="intelligentContainerBoxList{{idx}}_no" name="intelligentContainerBoxList[{{idx}}].no" type="text" value="{{row.no}}" maxlength="32" class="input-small "/>
+							</td>
+							<td>
+								<select id="intelligentContainerBoxList{{idx}}_type" name="intelligentContainerBoxList[{{idx}}].type" data-value="{{row.type}}" class="input-small ">
+									<option value=""></option>
+									<c:forEach items="${fns:getDictList('ic_box_type')}" var="dict">
+										<option value="${dict.value}">${dict.label}</option>
+									</c:forEach>
+								</select>
 							</td>
 							<td>
 								<select id="intelligentContainerBoxList{{idx}}_status" name="intelligentContainerBoxList[{{idx}}].status" data-value="{{row.status}}" class="input-small ">

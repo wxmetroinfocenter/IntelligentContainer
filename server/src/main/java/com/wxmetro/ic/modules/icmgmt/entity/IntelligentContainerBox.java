@@ -19,7 +19,8 @@ public class IntelligentContainerBox extends DataEntity<IntelligentContainerBox>
 	private String no;		// 货柜柜箱编号
 	private String status;		// 货柜柜箱状态
 	private String sort;		// 排序
-	
+	private String type;    //柜子类型
+
 	public IntelligentContainerBox() {
 		super();
 	}
@@ -67,5 +68,12 @@ public class IntelligentContainerBox extends DataEntity<IntelligentContainerBox>
 	public void setSort(String sort) {
 		this.sort = sort;
 	}
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

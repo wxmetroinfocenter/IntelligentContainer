@@ -3,6 +3,7 @@ package com.wxmetro.ic.modules.icmgmt.web;
 import com.wxmetro.ic.common.config.Constants;
 import com.wxmetro.ic.common.utils.StringUtils;
 import com.wxmetro.ic.modules.icmgmt.entity.*;
+import com.wxmetro.ic.modules.icmgmt.service.IntelligentContainerBoxOpeningService;
 import com.wxmetro.ic.modules.icmgmt.service.IntelligentContainerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +23,9 @@ public class ApiController {
 
     @Autowired
     IntelligentContainerService icService;
+
+    @Autowired
+    private IntelligentContainerBoxOpeningService openingService;
 
     @RequestMapping("/register1")
     public ApiResultEntity register1(@RequestBody RegisterEntity bean) {
@@ -137,8 +142,21 @@ public class ApiController {
 //                icService.saveBoxes(existed);
 
                 Map<String,String> boxes = new HashMap<String, String>();
-                boxes.put("openbox", "1");
-                result.setData(boxes);
+//                boxes.put("openbox", "1");
+//                result.setData(boxes);
+                IntelligentContainerBoxOpening openBoxCondition = new IntelligentContainerBoxOpening();
+                openBoxCondition.setIcid(bean.getSerialNo());
+
+                List<IntelligentContainerBoxOpening> openBoxList = openingService.findList(openBoxCondition);
+                if(openBoxList != null && !openBoxList.isEmpty()){
+                    IntelligentContainerBoxOpening openBox = openBoxList.get(0);
+
+                    boxes.put("openbox", openBox.getNo());
+                    result.setData(boxes);
+
+                    //remove
+                    openingService.delete(openBox);
+                }
 
                 result.setMessage("状态保持成功。");
             }

@@ -55,9 +55,7 @@ public class IntelligentContainerService extends CrudService<IntelligentContaine
 	public void save(IntelligentContainer intelligentContainer) {
 		this.saveWithDuplicateCheck(intelligentContainer);
 		for (IntelligentContainerBox intelligentContainerBox : intelligentContainer.getIntelligentContainerBoxList()){
-			if (intelligentContainerBox.getId() == null){
-				continue;
-			}
+
 			if (IntelligentContainerBox.DEL_FLAG_NORMAL.equals(intelligentContainerBox.getDelFlag())){
 				if (StringUtils.isBlank(intelligentContainerBox.getId())){
 					intelligentContainerBox.setSerialNo(intelligentContainer);
@@ -82,7 +80,7 @@ public class IntelligentContainerService extends CrudService<IntelligentContaine
 	}
 
 	@Transactional(readOnly = false)
-	void saveBox(IntelligentContainerBox bean) {
+	public void saveBox(IntelligentContainerBox bean) {
 		IntelligentContainerBox existed = intelligentContainerBoxDao.getByKey(bean.getSerialNo().getId() , bean.getNo());
 		if(existed == null){
 			bean.preInsert();

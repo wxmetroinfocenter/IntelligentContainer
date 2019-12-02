@@ -32,6 +32,9 @@
 			<li>初始化货柜数量：
 				<form:input path="number" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
+			<li>初始化货柜柜箱数量：
+				<form:input path="boxNum" htmlEscape="false" maxlength="64" class="input-medium"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="初始化"/></li>
 			<li class="clearfix"></li>
 		</ul>

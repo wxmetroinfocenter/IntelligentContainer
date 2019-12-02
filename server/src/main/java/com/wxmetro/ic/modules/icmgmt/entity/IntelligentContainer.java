@@ -27,7 +27,11 @@ public class IntelligentContainer extends DataEntity<IntelligentContainer> {
 	private String status;      // 状态
 
 	private int number = 1;
+	private int boxNum = 1;
 	private Date initDate; //初始化日期
+
+	private String no;
+	private String boxStatus;
 
 	private List<IntelligentContainerBox> intelligentContainerBoxList = Lists.newArrayList();		// 子表列表
 	
@@ -90,6 +94,30 @@ public class IntelligentContainer extends DataEntity<IntelligentContainer> {
 
 	public void setNumber(int number) {
 		this.number = number;
+	}
+
+	public int getBoxNum() {
+		return boxNum;
+	}
+
+	public void setBoxNum(int boxNum) {
+		this.boxNum = boxNum;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getBoxStatus() {
+		return boxStatus;
+	}
+
+	public void setBoxStatus(String boxStatus) {
+		this.boxStatus = boxStatus;
 	}
 
 	public Date getInitDate() {
