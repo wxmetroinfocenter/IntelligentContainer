@@ -78,7 +78,7 @@ public class IntelligentContainerController extends BaseController {
 	public String boxlist(IntelligentContainer intelligentContainer, Model model) {
 
 		IntelligentContainer ic = intelligentContainerService.get(intelligentContainer.getId());
-		model.addAttribute("intelligentContainer", intelligentContainer);
+		model.addAttribute("intelligentContainer", ic);
 		return "modules/icmgmt/intelligentContainerBoxList";
 	}
 
@@ -97,6 +97,7 @@ public class IntelligentContainerController extends BaseController {
 			List<IntelligentContainerBoxOpening> result =  openingService.findList(boxOpeningCondition);
 			if(result != null && !result.isEmpty() ){
 				logger.info("此货柜还有锁正待开锁");
+				model.addAttribute("message","此货柜还有锁正待开锁，请稍后再试！");
 				addMessage(redirectAttributes, "此货柜还有锁正待开锁，请稍后再试！");
 				return "modules/icmgmt/intelligentContainerBoxList";
 			}else {

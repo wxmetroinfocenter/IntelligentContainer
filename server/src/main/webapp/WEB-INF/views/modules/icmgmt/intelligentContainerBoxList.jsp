@@ -22,8 +22,9 @@
 			<li>货柜名： ${intelligentContainer.deviceName} </li><li class="clearfix"></li>
 			<li>货柜状态： ${fns:getDictLabel(intelligentContainer.status, 'ic_status', '')} </li><li class="clearfix"></li>
 		</ul>
+		<sys:message content="${message}"/>
 	</form:form>
-	<sys:message content="${message}"/>
+
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
@@ -50,7 +51,7 @@
 					${item.remarks}
 				</td>
 				<shiro:hasPermission name="icmgmt:intelligentContainer:edit"><td>
-					<a href="${ctx}/icmgmt/intelligentContainer/openbox?id=${intelligentContainer.id}&no=${item.no}&boxStatus=1" onclick="return confirmx('确认要打开此柜箱吗？', this.href)" class="btn">开锁</a>
+					<a href="${ctx}/icmgmt/intelligentContainer/openbox?id=${intelligentContainer.id}&no=${item.no}&boxStatus=1" onclick="return confirmx('确认要打开此柜箱吗？', this.href)" class="btn btn-primary">开锁</a>
 					&nbsp;&nbsp;&nbsp;
 					<a href="${ctx}/icmgmt/intelligentContainer/openbox?id=${intelligentContainer.id}&no=${item.no}&boxStatus=0" class="btn">关锁</a>
 				</td></shiro:hasPermission>
@@ -60,7 +61,7 @@
 	</table>
 
 	<div class="form-actions">
-		<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+		<a href="${ctx}/icmgmt/intelligentContainer/" class="btn">返 回</a>
 	</div>
 </body>
 </html>
